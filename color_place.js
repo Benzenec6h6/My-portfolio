@@ -4,7 +4,7 @@ const W=0,R=1,G=2,B=3; //色指定
 let canvasW = 640; // canvas要素の横幅(px)
 let canvasH = 740; // canvas要素の縦幅(px)
 let mouseX,mouseY; // 最後にクリックされた位置のx座標,最後にクリックされた位置のy座標
-
+let limit=75*1000; //制限時間指定5*60*1000
 let px,py;
 let ans=[],ques=[],r=[],g=[],b=[];
 
@@ -148,12 +148,15 @@ window.onload = function() {
   ctx = canvas.getContext('2d');
   
 function borad(){
-  ctx.strokeStyle = 'black';
-
   ctx.font = "40px serif";
   ctx.fillText('start', 5, 30);
   ctx.strokeRect(0,0,90,40);
   
+  ctx.font = "40px serif";
+  ctx.fillText('stop', 100, 30);
+  ctx.strokeRect(100,0,80,40);  
+  
+  ctx.strokeStyle = 'black';
   for(let i=0;i<6;i++){
   	for(let j=0;j<8;j++){
   	  ctx.strokeRect(80*(i+1),80*j+100,80,80);
@@ -164,16 +167,57 @@ function borad(){
 }
 
 function timer(){
-  let m=5*60*1000;
-  let now=new Date();
-  let rest = m - now.getTime();
-  let sec = Math.floor(rest/1000);
+  let m,s,mm;  //setIntervalとclearIntervalを調べる。
+  m=Math.floor(limit/60000);
+  s=Math.floor(limit/1000)%60;
+  mm=limit%1000;
+  limit=limit-100;
   
-  ctx.strokeStyle = 'black';
+  ctx.fillStyle = 'black';
   ctx.font = "40px serif";
-  ctx.fillText(sec, 100, 30);
-  ctx.strokeRect(100,0,100,40);
-  ctx.clearRect(100, 0, 100, 40);
+  ctx.clearRect(230, 0, 300, 40);
+  ctx.fillText(m+','+s+','+mm, 230, 30);
+  if(s<10){
+    ctx.font = "40px serif";
+    ctx.clearRect(230, 0, 300, 40);
+    ctx.fillText(m+','+0+s+','+mm, 230, 30);
+  }
+  
+  if(mm<100){
+    ctx.font = "40px serif";
+    ctx.clearRect(230, 0, 300, 40);
+    ctx.fillText(m+','+s+','+0+0+mm, 230, 30);
+  }
+  
+  if(s<10&&mm<100){
+    ctx.font = "40px serif";
+    ctx.clearRect(230, 0, 300, 40);
+    ctx.fillText(m+','+0+s+','+0+0+mm, 230, 30);
+  }
+  
+  if(limit<=30000){
+    ctx.fillStyle = 'red';
+    ctx.font = "40px serif";
+    ctx.clearRect(230, 0, 300, 40);
+    ctx.fillText(m+','+s+','+mm, 230, 30);
+  }
+  if(limit<=10000){
+    if(limit%200==0){
+      ctx.fillStyle = 'red';
+      ctx.font = "40px serif";
+      ctx.clearRect(230, 0, 300, 40);
+      ctx.fillText(m+','+0+s+','+mm, 230, 30);
+    }
+    if(limit%200==100){
+      ctx.clearRect(230, 0, 300, 40);
+    }
+  }
+  if(limit<=0){
+    ctx.fillStyle = 'red';
+    ctx.font = "40px serif";
+    ctx.clearRect(230, 0, 300, 40);
+    ctx.fillText(0+','+0+0+','+0+0+0, 230, 30);
+  }
 }
   
 function circ(color,x,y){
@@ -301,13 +345,13 @@ function question(){
 shuffle();
 borad();
 timer();
-//disp();
+setInterval(timer,100);
+
   
   // クリックイベントの登録
   canvas.onclick = function(e) {
     // 一度描画をクリア
     //ctx.clearRect(0, 0, canvasW, canvasH);
-      
     // クリック位置の座標計算（canvasの左上を基準。-2ずつしているのはborderの分）
     var rect = e.target.getBoundingClientRect();
     mouseX = e.clientX - Math.floor(rect.left) - 2;
@@ -316,10 +360,11 @@ timer();
     py=Math.floor((mouseY-100)/80)-1;
 
     // クリック位置を中心に円を描画
-    if(0<mouseX&&mouseX<90&&0<mouseY&&mouseY<40){
-      disp();
-    }
-    if(0<=px&&px<=5&&0<=py&&py<=5){
+      let t;
+      if(0<mouseX&&mouseX<90&&0<mouseY&&mouseY<40){
+        disp();
+      }
+    if(0<=px&&px<=5&&0<=py&&py<=5&&0<limit){
       if(c==W){
         ques[px][py]=W;
       }
@@ -340,5 +385,4 @@ timer();
     ctx.textAlign = 'right';
     ctx.fillText('( ' + mouseX + ', ' + mouseY + ' )', canvasW - 20, canvasH - 20, maxWidth);*/
   };
-  //borad();
 };
