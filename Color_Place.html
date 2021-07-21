@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="ja">
-	<head>
-		<meta charset="utf-8">
-		<link rel="stylesheet"href="color_place.css">
-		<title>Color Place</title>
-	</head>
-	<body>
-		<h1>Coloer Place</h1>
-		<input type="button" value="start" onclick="shuffle();disp();"/>
-		<input type="button" value="reset" onclick=""/>
-		<script src="./color_place.js"charset="utf-8"></script>
-		<canvas id="canvas"></canvas>
-	</body>
+    <head>
+      <meta charset="utf-8">
+      <title>Color Place</title>
+      <link rel="stylesheet" href="color_place.css" />
+    </head>
+    <body>
+      <h1>Coloer Place</h1>
+      <p>startをクリックでゲーム開始</p>
+      <div id="axisCanvasRapper">
+        <canvas id="axisCanvas"></canvas>
+      </div>
+      <script src="./color_place.js"charset="utf-8"></script>
+    </body>
+
+</html>
