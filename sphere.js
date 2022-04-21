@@ -1,7 +1,7 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 
-let d=10,l=5,deg=0,cou=200,sca=0,ver=32;
+let d=10,l=5,deg=0,cou=200,sca=0,ver=16;
 let x=new Array(ver*(ver/2+1));
 let y=new Array(ver*(ver/2+1));
 let z=new Array(ver*(ver/2+1));
