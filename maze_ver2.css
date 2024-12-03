@@ -1,0 +1,61 @@
+#button{
+    position: relative;
+    float: left;
+}
+
+#countdown {
+    float: right;
+    position: absolute;
+    left: 110px;
+    top: 115px;
+}
+
+.red{
+    color: red;
+}
+
+@keyframes blinking{
+    0%{opacity: 0;}
+    100%{opacity: 1;}
+}
+
+.blink{
+    animation: blinking 0.1s ease-in-out infinite alternate;
+}
+
+.time{
+    float: left;
+}
+
+table{
+    padding-top:5px;
+    border-collapse: collapse;
+    clear: both;
+}
+
+td {
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+    text-align: center;
+}
+
+.player{
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin: 0 auto;
+    background-color: red;
+    text-align: center;
+}
+
+.path {
+    background-color: white;
+}
+
+.wall {
+    background-color: black;
+}
