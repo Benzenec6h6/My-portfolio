@@ -4,10 +4,10 @@ const W=0,R=1,G=2,B=3; //色指定
 let canvasW = 640; // canvas要素の横幅(px)
 let canvasH = 740; // canvas要素の縦幅(px)
 let mouseX,mouseY; // 最後にクリックされた位置のx座標,最後にクリックされた位置のy座標
-let count,limit=75*1000; //制限時間指定5*60*1000
+let count,limit=5*60*1000; //制限時間指定5*60*1000
 let px,py;
 let flg=false;
-let ans=[],ques=[],r=[],g=[],b=[];
+let ans=[],ques=[],he=[],wi=[];
 
 for(let i=0;i<6;i++){
   ans[i]=[];
@@ -19,107 +19,29 @@ for(let i=0;i<6;i++){
     ans[i][j]=0;
     ques[i][j]=0;
   }
-  r[i]=i;
-  g[i]=i;
-  b[i]=i;
+  he[i]=i+1;
+  wi[i]=i+1;
 }
 
-function shuffle(){
-//red
-  let x,y,a=r.length;
+function shuffle(lendata){
+  let x,y,a=lendata.length;
   while(a){
     let j=Math.floor(Math.random()*a);
-    let t=r[--a];
-    r[a]=r[j];
-    r[j]=t;
-  }
-  for(let i=0;i<6;i++){
-   y=r[i];
-   ans[i][y]=R;
-  }
- 
-//green
-  a=g.length;
-  while(a){
-    let j=Math.floor(Math.random()*a);
-    let t=g[--a];
-    g[a]=g[j];
-    g[j]=t;
-  }
-  
-  while(true){
-    for(let i=0;i<6;++i){
-      if(r[i]==g[i]&&i<5){
-        x=g[i];
-        g[i]=g[i+1];
-        g[i+1]=x;
-      }
-      if(r[i]==g[i]&&i==5){
-        x=g[5];
-        g[5]=g[0];
-        g[0]=x;
-      }
-    }
-    if(list(0)==true){
-      break;
-    }
-  }
-  
-  for(let j=0;j<6;j++){
-    y=g[j];
-    ans[j][y]=G;
-  }
-  
-//blue
-  a=b.length;
-  while(a){
-    let j=Math.floor(Math.random()*a);
-    let t=b[--a];
-    b[a]=b[j];
-    b[j]=t;
-  }
-  
-  while(true){
-    for(let i=0;i<6;i++){
-      if((r[i]==b[i]||g[i]==b[i])&&i<5){
-        x=b[i];
-        b[i]=b[i+1];
-        b[i+1]=x;
-      }
-      if((r[i]==b[i]||g[i]==b[i])&&i==5){
-        x=b[5];
-        b[5]=b[0];
-        b[0]=x;
-      }
-    }
-    if(list(1)==true){
-      break;
-    }
-  }
-  for(let j=0;j<6;j++){
-    y=b[j];
-    ans[j][y]=B;
+    let t=lendata[--a];
+    lendata[a]=lendata[j];
+    lendata[j]=t;
   }
 }
 
-function list(d){
-  if(d==0){  
-    for(let i=0;i<6;i++){
-      if(r[i]==g[i]){
-        return false;
-      }
+shuffle(he);
+shuffle(wi);
+for(let i=0;i<6;i++){
+  for(let j=0;j<6;j++){
+    if((he[i]*wi[j])%7<4){
+      ans[i][j]=(he[i]*wi[j])%7;
     }
-    return true;
   }
-  if(d==1){
-    for(let i=0;i<6;i++){
-      if(r[i]==b[i]||g[i]==b[i]){
-        return false;
-      }
-    }
-    return true;
-  }
-}
+}  
 
 let c;
 window.addEventListener('DOMContentLoaded',function(){
@@ -149,21 +71,13 @@ window.onload = function() {
   ctx = canvas.getContext('2d');
   
 function borad(){
-  ctx.font = "40px serif";
-  ctx.fillText('start', 5, 30);
-  ctx.strokeRect(0,0,90,40);
-  
-  ctx.font = "40px serif";
-  ctx.fillText('pause', 100, 30);
-  ctx.strokeRect(100,0,100,40);  
-  
   ctx.strokeStyle = 'black';
   for(let i=0;i<6;i++){
   	for(let j=0;j<8;j++){
-  	  ctx.strokeRect(80*(i+1),80*j+100,80,80);
+  	  ctx.strokeRect(80*(i+1),80*j+45,80,80);
   	}
-  	ctx.strokeRect(0,80*(i+1)+100,80,80);
-	ctx.strokeRect(560,80*(i+1)+100,80,80);
+  	ctx.strokeRect(0,80*(i+1)+45,80,80);
+	ctx.strokeRect(560,80*(i+1)+45,80,80);
   }
 }
 
@@ -176,89 +90,94 @@ function timer(){
   
   ctx.fillStyle = 'black';
   ctx.font = "40px serif";
-  ctx.clearRect(230, 0, 300, 40);
-  ctx.fillText(m+','+s+','+mm, 230, 30);
+  ctx.clearRect(0, 0, 300, 40);
+  ctx.fillText(m+','+s+','+mm, 0, 30);
   if(s<10){
     ctx.font = "40px serif";
-    ctx.clearRect(230, 0, 300, 40);
-    ctx.fillText(m+','+0+s+','+mm, 230, 30);
+    ctx.clearRect(0, 0, 300, 40);
+    ctx.fillText(m+','+0+s+','+mm, 0, 30);
   }
   
   if(mm<100){
     ctx.font = "40px serif";
-    ctx.clearRect(230, 0, 300, 40);
-    ctx.fillText(m+','+s+','+0+0+mm, 230, 30);
+    ctx.clearRect(0, 0, 300, 40);
+    ctx.fillText(m+','+s+','+0+0+mm, 0, 30);
   }
   
   if(s<10&&mm<100){
     ctx.font = "40px serif";
-    ctx.clearRect(230, 0, 300, 40);
-    ctx.fillText(m+','+0+s+','+0+0+mm, 230, 30);
+    ctx.clearRect(0, 0, 300, 40);
+    ctx.fillText(m+','+0+s+','+0+0+mm, 0, 30);
   }
   
   if(limit<=30000){
     ctx.fillStyle = 'red';
     ctx.font = "40px serif";
-    ctx.clearRect(230, 0, 300, 40);
-    ctx.fillText(m+','+s+','+mm, 230, 30);
+    ctx.clearRect(0, 0, 300, 40);
+    ctx.fillText(m+','+s+','+mm, 0, 30);
     if(mm<100){
       ctx.font = "40px serif";
-      ctx.clearRect(230, 0, 300, 40);
-      ctx.fillText(m+','+s+','+0+0+mm, 230, 30);
+      ctx.clearRect(0, 0, 300, 40);
+      ctx.fillText(m+','+s+','+0+0+mm, 0, 30);
     }
   }
   if(limit<=10000){
     if(limit%200==0){
       ctx.fillStyle = 'red';
       ctx.font = "40px serif";
-      ctx.clearRect(230, 0, 300, 40);
-      ctx.fillText(m+','+0+s+','+mm, 230, 30);
+      ctx.clearRect(0, 0, 300, 40);
+      ctx.fillText(m+','+0+s+','+mm, 0, 30);
     }
     if(limit%200==100){
-      ctx.clearRect(230, 0, 300, 40);
+      ctx.clearRect(0, 0, 300, 40);
     }
   }
   if(limit<=0){
     ctx.fillStyle = 'red';
     ctx.font = "40px serif";
-    ctx.clearRect(230, 0, 300, 40);
-    ctx.fillText(0+','+0+0+','+0+0+0, 230, 30);
+    ctx.clearRect(0, 0, 300, 40);
+    ctx.fillText(0+','+0+0+','+0+0+0, 0, 30);
   }
 }
  
 function start(){
   disp();
+  borad();
+  question();
   count=setInterval(timer,100);
   return true;
 }
 function pause(){
   clearInterval(count);
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0,44,640,685);
   return false;
 }
-  
+
+//円の描画
 function circ(color,x,y){
   if(color==W){
 	ctx.fillStyle="white";
 	ctx.beginPath();
-	ctx.arc(40+80*(x+1),140+80*(y+1),36,0,Math.PI*2,false);
+	ctx.arc(40+80*(x+1),85+80*(y+1),36,0,Math.PI*2,false);
 	ctx.fill();
   }
   if(color==R){
 	ctx.fillStyle="red";
 	ctx.beginPath();
-	ctx.arc(40+80*(x+1),140+80*(y+1),35,0,Math.PI*2,false);
+	ctx.arc(40+80*(x+1),85+80*(y+1),35,0,Math.PI*2,false);
 	ctx.fill();
   }
   if(color==G){
 	ctx.fillStyle="green";
 	ctx.beginPath();
-	ctx.arc(40+80*(x+1),140+80*(y+1),35,0,Math.PI*2,false);
+	ctx.arc(40+80*(x+1),85+80*(y+1),35,0,Math.PI*2,false);
 	ctx.fill();
   }
   if(color==B){
 	ctx.fillStyle="blue";
 	ctx.beginPath();
-	ctx.arc(40+80*(x+1),140+80*(y+1),35,0,Math.PI*2,false);
+	ctx.arc(40+80*(x+1),85+80*(y+1),35,0,Math.PI*2,false);
 	ctx.fill();
   }
 }
@@ -341,7 +260,7 @@ function disp(){
 function question(){
   for(let i=0;i<6;i++){
     for(let j=0;j<6;j++){
-      if(ques[i][j]==W){r
+      if(ques[i][j]==W){
         circ(W,i,j);
       }
       if(ques[i][j]==R){
@@ -356,12 +275,57 @@ function question(){
     }
   }
 }
-   
 
-shuffle();
+function answer(){
+  for(let i=0;i<6;i++){
+    for(let j=0;j<6;j++){
+      if(ans[i][j]!=ques[i][j]){
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 borad();
 timer();
-  
+
+//開発用チート
+function cheat(){
+  for(let i=0;i<6;i++){
+    console.log(ans[0][i],ans[1][i],ans[2][i],ans[3][i],ans[4][i],ans[5][i]);
+  }
+}
+//cheat();
+
+//game start
+document.getElementById('start').onclick = function(){
+  flg=start();
+}
+//game pause
+document.getElementById('pause').onclick = function(){
+  flg=pause();
+}
+//answer
+document.getElementById('answer').onclick = function(){
+  const start_button = document.getElementById("start");
+  const pause_button = document.getElementById("pause");
+  const answer_button = document.getElementById("answer");
+  //alertでダイアログ表示
+  if(answer()==false){
+    alert('不正解');
+  }else{
+    flg=pause();
+    disp();
+    borad();
+    question();
+    start_button.disabled = "disabled";
+    pause_button.disabled = "disabled";
+    answer_button.disabled = "disabled";
+    alert('正解');
+  }
+}
+
   // クリックイベントの登録
   canvas.onclick = function(e) {
     // 一度描画をクリア
@@ -371,35 +335,23 @@ timer();
     mouseX = e.clientX - Math.floor(rect.left) - 2;
     mouseY = e.clientY - Math.floor(rect.top) - 2;
     px=Math.floor(mouseX/80)-1;
-    py=Math.floor((mouseY-100)/80)-1;
+    py=Math.floor((mouseY-100)/80);
 
     // クリック位置を中心に円を描画
-      
-      if(0<mouseX&&mouseX<90&&0<mouseY&&mouseY<40){
-        flg=start();
+      if(0<=px&&px<=5&&0<=py&&py<=5&&0<limit&&flg==true){
+        if(c==W){
+          ques[px][py]=W;
+        }
+        if(c==R){
+          ques[px][py]=R;
+        }
+        if(c==G){
+          ques[px][py]=G;
+        }
+        if(c==B){
+          ques[px][py]=B;
+        }
+        question();
       }
-      if(100<mouseX&&mouseX<200&&0<mouseY&&mouseY<40){
-        flg=pause();
-      }
-    if(0<=px&&px<=5&&0<=py&&py<=5&&0<limit&&flg==true){
-      if(c==W){
-        ques[px][py]=W;
-      }
-      if(c==R){
-        ques[px][py]=R;
-      }
-      if(c==G){
-        ques[px][py]=G;
-      }
-      if(c==B){
-        ques[px][py]=B;
-      }
-    }
-    question();
-
-    // 座標の表示テキストを描画
-    /*let maxWidth = 100;
-    ctx.textAlign = 'right';
-    ctx.fillText('( ' + mouseX + ', ' + mouseY + ' )', canvasW - 20, canvasH - 20, maxWidth);*/
   };
 };
